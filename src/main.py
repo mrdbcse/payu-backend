@@ -15,7 +15,7 @@ from src.utils import (
     verify_payment,
 )
 
-cred = config()
+cred = config(env="LIVE")
 
 app = FastAPI()
 

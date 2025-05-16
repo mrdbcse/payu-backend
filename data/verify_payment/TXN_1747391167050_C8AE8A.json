@@ -1,0 +1,43 @@
+{
+  "status": 1,
+  "msg": "1 out of 1 Transactions Fetched Successfully",
+  "transaction_details": {
+    "TXN_1747391167050_C8AE8A": {
+      "mihpayid": "403993715533933358",
+      "request_id": "",
+      "bank_ref_num": "708247337922898000",
+      "amt": "1.00",
+      "transaction_amount": "1.00",
+      "txnid": "TXN_1747391167050_C8AE8A",
+      "additional_charges": "0.00",
+      "productinfo": "Test Payment",
+      "firstname": "DebjyotiBanerjee",
+      "bankcode": "CC",
+      "udf1": "",
+      "udf2": "",
+      "udf3": "",
+      "udf4": "",
+      "udf5": "",
+      "field2": "504162",
+      "field9": "Transaction is Successful",
+      "error_code": "E000",
+      "addedon": "2025-05-16 15:56:40",
+      "payment_source": "payu",
+      "card_type": "MAST",
+      "error_Message": "NO ERROR",
+      "net_amount_debit": 1.0,
+      "disc": "0.00",
+      "mode": "CC",
+      "PG_TYPE": "CC-PG",
+      "card_no": "XXXXXXXXXXXX2346",
+      "status": "success",
+      "unmappedstatus": "captured",
+      "Merchant_UTR": null,
+      "Settled_At": "0000-00-00 00:00:00",
+      "name_on_card": null,
+      "card_token": null,
+      "payment_aggregator": "PayU",
+      "offerAvailed": null
+    }
+  }
+}

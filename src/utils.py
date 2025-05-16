@@ -72,8 +72,8 @@ def generate_hash_payment(
     udf4: str = "",
     udf5: str = "",
 ) -> str:
-    key = config()["key"]
-    salt = config()["salt"]
+    key = config(env="LIVE")["key"]
+    salt = config(env="LIVE")["salt"]
     hash_string = f"{key}|{txnid}|{amount}|{productinfo}|{firstname}|{email}|{udf1}|{udf2}|{udf3}|{udf4}|{udf5}||||||{salt}"
     print(f"Hash String: {hash_string}")
     hash_object = hashlib.sha512(hash_string.encode("utf-8"))
@@ -83,8 +83,8 @@ def generate_hash_payment(
 
 
 def generate_hash_verify(var1: str) -> str:
-    key = config()["key"]
-    salt = config()["salt"]
+    key = config(env="LIVE")["key"]
+    salt = config(env="LIVE")["salt"]
     command = "verify_payment"
     hash_string = f"{key}|{command}|{var1}|{salt}"
     hash_object = hashlib.sha512(hash_string.encode("utf-8"))
@@ -94,7 +94,7 @@ def generate_hash_verify(var1: str) -> str:
 
 
 def verify_payment(txn_id: str):
-    cred = config()
+    cred = config(env="LIVE")
     payload = {
         "key": cred["key"],
         "command": "verify_payment",
@@ -102,21 +102,23 @@ def verify_payment(txn_id: str):
         "hash": generate_hash_verify(var1=txn_id),
     }
     headers = {"Content-Type": "application/x-www-form-urlencoded"}
-    res = requests.post(url=cred["verify_payment"], data=payload, headers=headers)
-
-    print(res.text)
-
-    v_res = decode_verify_payment_response(
-        payment_res=res.text.encode("utf-8"), txn_id=txn_id
+    res = requests.post(
+        url=cred["verify_payment"], data=payload, headers=headers, params={"form": "2"}
     )
 
-    print("Verify Payment Response:\n", v_res)
+    print(res.json())
+
+    # v_res = decode_verify_payment_response(
+    #     payment_res=res.text.encode("utf-8"), txn_id=txn_id
+    # )
+
+    print("Verify Payment Response:\n", res.json())
 
     file_path = os.path.join("data/verify_payment", f"{txn_id}.json")
 
     with open(file_path, "w", encoding="utf-8") as f:
-        json.dump(v_res, f, indent=2, ensure_ascii=False)
+        json.dump(res.json(), f, indent=2, ensure_ascii=False)
 
     print("Response Saved")
 
-    return v_res
+    return res

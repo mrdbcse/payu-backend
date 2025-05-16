@@ -1,0 +1,43 @@
+{
+  "status": 1,
+  "msg": "1 out of 1 Transactions Fetched Successfully",
+  "transaction_details": {
+    "TXN_1747391734153_CGRQ7T": {
+      "mihpayid": "23546272887",
+      "request_id": "",
+      "bank_ref_num": "966261631243",
+      "amt": "1.00",
+      "transaction_amount": "1.00",
+      "txnid": "TXN_1747391734153_CGRQ7T",
+      "additional_charges": "0.00",
+      "productinfo": "Test Payment",
+      "firstname": "DebjyotiBanerjee",
+      "bankcode": "INTENT",
+      "udf1": "",
+      "udf2": "",
+      "udf3": "",
+      "udf4": "",
+      "udf5": "",
+      "field2": "877067",
+      "field9": "Success|Completed Using Callback",
+      "error_code": "E000",
+      "addedon": "2025-05-16 16:06:07",
+      "payment_source": "payu",
+      "card_type": null,
+      "error_Message": "NO ERROR",
+      "net_amount_debit": 1.0,
+      "disc": "0.00",
+      "mode": "UPI",
+      "PG_TYPE": "UPI-PG",
+      "card_no": "",
+      "status": "success",
+      "unmappedstatus": "captured",
+      "Merchant_UTR": null,
+      "Settled_At": "0000-00-00 00:00:00",
+      "meCode": "{\"pgMerchantId\":\"INDB000009918659\"}",
+      "App_Name": "Phonepe",
+      "card_token": null,
+      "offerAvailed": null
+    }
+  }
+}
