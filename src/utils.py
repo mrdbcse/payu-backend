@@ -9,6 +9,8 @@ import phpserialize
 import requests
 from dotenv import load_dotenv
 
+from src.env import ENV
+
 load_dotenv()
 
 
@@ -72,8 +74,8 @@ def generate_hash_payment(
     udf4: str = "",
     udf5: str = "",
 ) -> str:
-    key = config(env="LIVE")["key"]
-    salt = config(env="LIVE")["salt"]
+    key = config(env=ENV)["key"]
+    salt = config(env=ENV)["salt"]
     hash_string = f"{key}|{txnid}|{amount}|{productinfo}|{firstname}|{email}|{udf1}|{udf2}|{udf3}|{udf4}|{udf5}||||||{salt}"
     print(f"Hash String: {hash_string}")
     hash_object = hashlib.sha512(hash_string.encode("utf-8"))
@@ -83,8 +85,8 @@ def generate_hash_payment(
 
 
 def generate_hash_verify(var1: str) -> str:
-    key = config(env="LIVE")["key"]
-    salt = config(env="LIVE")["salt"]
+    key = config(env=ENV)["key"]
+    salt = config(env=ENV)["salt"]
     command = "verify_payment"
     hash_string = f"{key}|{command}|{var1}|{salt}"
     hash_object = hashlib.sha512(hash_string.encode("utf-8"))
@@ -94,7 +96,7 @@ def generate_hash_verify(var1: str) -> str:
 
 
 def verify_payment(txn_id: str):
-    cred = config(env="LIVE")
+    cred = config(env=ENV)
     payload = {
         "key": cred["key"],
         "command": "verify_payment",

@@ -7,6 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import RedirectResponse
 from pydantic import BaseModel
 
+from src.env import ENV
 from src.utils import (
     config,
     format_payment_res,
@@ -15,7 +16,7 @@ from src.utils import (
     verify_payment,
 )
 
-cred = config(env="LIVE")
+cred = config(env=ENV)
 
 app = FastAPI()
 
