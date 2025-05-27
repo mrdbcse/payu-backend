@@ -14,6 +14,7 @@ from src.utils import (
     generate_hash_payment,
     generate_txn_id,
     refund,
+    refund_status,
     verify_payment,
 )
 
@@ -47,6 +48,10 @@ class RefundRequest(BaseModel):
     mihpayid: str
     txnid: str
     amount: str
+
+
+class RefundStatusRequest(BaseModel):
+    request_id: str
 
 
 @app.post("/initiate_payment")
@@ -107,4 +112,11 @@ async def payment_status(request: Request):
 async def initiate_refund(request: RefundRequest):
     res = refund(amount=request.amount, mihpayid=request.mihpayid, txnid=request.txnid)
     print("Refund Response:\n", res)
+    return {"status": 200, "data": res}
+
+
+@app.post("/check_refund_status")
+async def check_refund_status(request: RefundStatusRequest):
+    res = refund_status(request_id=request.request_id)
+    print("Refund Status Response:\n", res)
     return {"status": 200, "data": res}

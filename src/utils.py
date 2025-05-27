@@ -117,7 +117,7 @@ def refund(mihpayid: str, txnid: str, amount: str) -> dict:
     command = "cancel_refund_transaction"
     payload = {
         "key": key,
-        "command": "cancel_refund_transaction",
+        "command": command,
         "var1": mihpayid,
         "var2": txnid,
         "var3": amount,
@@ -131,6 +131,30 @@ def refund(mihpayid: str, txnid: str, amount: str) -> dict:
     print("Response: ", res.json())
 
     file_path = os.path.join("data/refund", f"{txnid}.json")
+
+    with open(file_path, "w", encoding="utf-8") as f:
+        json.dump(res.json(), f, indent=2, ensure_ascii=False)
+
+    print("Response Saved")
+    return res.json()
+
+
+def refund_status(request_id: str) -> dict:
+    command = "check_action_status"
+    payload = {
+        "key": key,
+        "command": command,
+        "var1": request_id,
+        "hash": generic_hash(var1=request_id, command=command),
+    }
+    headers = {"Content-Type": "application/x-www-form-urlencoded"}
+    res = requests.post(
+        url=cred["payu_url"], data=payload, headers=headers, params={"form": "2"}
+    )
+
+    print("Response: ", res.json())
+
+    file_path = os.path.join("data/refund_status", f"{request_id}.json")
 
     with open(file_path, "w", encoding="utf-8") as f:
         json.dump(res.json(), f, indent=2, ensure_ascii=False)

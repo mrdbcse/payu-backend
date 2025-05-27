@@ -1,0 +1,25 @@
+{
+  "status": 1,
+  "msg": "1 out of 1 Transactions Fetched Successfully",
+  "transaction_details": {
+    "17082938044": {
+      "17082938044": {
+        "mihpayid": "23533007976",
+        "bank_ref_num": null,
+        "request_id": "17082938044",
+        "amt": "1.00",
+        "mode": "UPI",
+        "action": "refund",
+        "token": "TXN_1747295724521_XJCDT",
+        "status": "pending",
+        "bank_arn": null,
+        "settlement_id": null,
+        "amount_settled": null,
+        "UTR_no": null,
+        "value_date": null,
+        "refund_mode": "Instant Credit through UPI",
+        "successAmount": null
+      }
+    }
+  }
+}
