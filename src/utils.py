@@ -7,11 +7,12 @@ import time
 
 import phpserialize
 import requests
-from dotenv import load_dotenv
 
-from src.env import ENV
+from src.env import config
 
-load_dotenv()
+cred = config()
+key = cred["key"]
+salt = cred["salt"]
 
 
 def decode_bytes(obj):
@@ -23,15 +24,6 @@ def decode_bytes(obj):
         return type(obj)(decode_bytes(i) for i in obj)
     else:
         return obj
-
-
-def config(env: str = "TEST") -> dict:
-    return {
-        "key": os.getenv(f"{env}_MERCHANT_KEY"),
-        "salt": os.getenv(f"{env}_MERCHANT_SALT"),
-        "action_url": os.getenv(f"{env}_ACTION_URL"),
-        "verify_payment": os.getenv(f"{env}_VERIFY_PAYMENT"),
-    }
 
 
 def decode_verify_payment_response(payment_res: str, txn_id: str) -> dict:
@@ -74,8 +66,6 @@ def generate_hash_payment(
     udf4: str = "",
     udf5: str = "",
 ) -> str:
-    key = config(env=ENV)["key"]
-    salt = config(env=ENV)["salt"]
     hash_string = f"{key}|{txnid}|{amount}|{productinfo}|{firstname}|{email}|{udf1}|{udf2}|{udf3}|{udf4}|{udf5}||||||{salt}"
     print(f"Hash String: {hash_string}")
     hash_object = hashlib.sha512(hash_string.encode("utf-8"))
@@ -84,10 +74,7 @@ def generate_hash_payment(
     return hash_value
 
 
-def generate_hash_verify(var1: str) -> str:
-    key = config(env=ENV)["key"]
-    salt = config(env=ENV)["salt"]
-    command = "verify_payment"
+def generic_hash(var1: str, command: str) -> str:
     hash_string = f"{key}|{command}|{var1}|{salt}"
     hash_object = hashlib.sha512(hash_string.encode("utf-8"))
     hash_value = hash_object.hexdigest()
@@ -96,16 +83,16 @@ def generate_hash_verify(var1: str) -> str:
 
 
 def verify_payment(txn_id: str):
-    cred = config(env=ENV)
+    command = "verify_payment"
     payload = {
         "key": cred["key"],
         "command": "verify_payment",
         "var1": txn_id,
-        "hash": generate_hash_verify(var1=txn_id),
+        "hash": generic_hash(var1=txn_id, command=command),
     }
     headers = {"Content-Type": "application/x-www-form-urlencoded"}
     res = requests.post(
-        url=cred["verify_payment"], data=payload, headers=headers, params={"form": "2"}
+        url=cred["payu_url"], data=payload, headers=headers, params={"form": "2"}
     )
 
     print(res.json())
@@ -124,3 +111,29 @@ def verify_payment(txn_id: str):
     print("Response Saved")
 
     return res
+
+
+def refund(mihpayid: str, txnid: str, amount: str) -> dict:
+    command = "cancel_refund_transaction"
+    payload = {
+        "key": key,
+        "command": "cancel_refund_transaction",
+        "var1": mihpayid,
+        "var2": txnid,
+        "var3": amount,
+        "hash": generic_hash(var1=mihpayid, command=command),
+    }
+    headers = {"Content-Type": "application/x-www-form-urlencoded"}
+    res = requests.post(
+        url=cred["payu_url"], data=payload, headers=headers, params={"form": "2"}
+    )
+
+    print("Response: ", res.json())
+
+    file_path = os.path.join("data/refund", f"{txnid}.json")
+
+    with open(file_path, "w", encoding="utf-8") as f:
+        json.dump(res.json(), f, indent=2, ensure_ascii=False)
+
+    print("Response Saved")
+    return res.json()

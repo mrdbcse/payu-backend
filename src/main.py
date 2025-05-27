@@ -13,6 +13,7 @@ from src.utils import (
     format_payment_res,
     generate_hash_payment,
     generate_txn_id,
+    refund,
     verify_payment,
 )
 
@@ -40,6 +41,12 @@ class PaymentRequest(BaseModel):
     email: str
     phone: str
     product_info: str
+
+
+class RefundRequest(BaseModel):
+    mihpayid: str
+    txnid: str
+    amount: str
 
 
 @app.post("/initiate_payment")
@@ -96,6 +103,8 @@ async def payment_status(request: Request):
     )
 
 
-"""
-a:3:{s:6:"status";i:1;s:3:"msg";s:44:"1 out of 1 Transactions Fetched Successfully";s:19:"transaction_details";a:1:{s:24:"TXN_1747374126877_KQ46LH";a:35:{s:8:"mihpayid";s:18:"403993715533930083";s:10:"request_id";s:0:"";s:12:"bank_ref_num";s:18:"899565009864366100";s:3:"amt";s:4:"1.00";s:18:"transaction_amount";s:4:"1.00";s:5:"txnid";s:24:"TXN_1747374126877_KQ46LH";s:18:"additional_charges";s:4:"0.00";s:11:"productinfo";s:12:"Test Payment";s:9:"firstname";s:16:"DebjyotiBanerjee";s:8:"bankcode";s:2:"CC";s:4:"udf1";s:0:"";s:4:"udf2";s:0:"";s:4:"udf3";s:0:"";s:4:"udf4";s:0:"";s:4:"udf5";s:0:"";s:6:"field2";s:6:"398494";s:6:"field9";s:25:"Transaction is Successful";s:10:"error_code";s:4:"E000";s:7:"addedon";s:19:"2025-05-16 11:12:39";s:14:"payment_source";s:4:"payu";s:9:"card_type";s:4:"MAST";s:13:"error_Message";s:8:"NO ERROR";s:16:"net_amount_debit";d:1;s:4:"disc";s:4:"0.00";s:4:"mode";s:2:"CC";s:7:"PG_TYPE";s:5:"CC-PG";s:7:"card_no";s:16:"XXXXXXXXXXXX2346";s:6:"status";s:7:"success";s:14:"unmappedstatus";s:8:"captured";s:12:"Merchant_UTR";N;s:10:"Settled_At";s:19:"0000-00-00 00:00:00_UTR";N_UTR";N;s:10:"Settled_At";s:19:"0000-00-00 00:00:00";s:12:"name_on_card";N;s:10:"card_token";N;s:18:"payment_aggregator";s:4:"PayU";s:12:"offerAvailed";N;}}}
-"""
+@app.post("/initiate_refund")
+async def initiate_refund(request: RefundRequest):
+    res = refund(amount=request.amount, mihpayid=request.mihpayid, txnid=request.txnid)
+    print("Refund Response:\n", res)
+    return {"status": 200, "data": res}
